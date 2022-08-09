@@ -28,9 +28,23 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "typed-function",
+              "seedrandom",
+              "javascript-natural-sort",
+              "decimal.js",
+              "complex.js",
+              "fraction.js",
+              "tiny-emitter",
+              "escape-latex"
+            ]
           },
           "configurations": {
             "production": {
@@ -98,7 +112,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "webWorkerTsConfig": "tsconfig.worker.json"
           }
         }
       }
