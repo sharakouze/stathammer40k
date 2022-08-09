@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { nanoid } from 'nanoid';
 import { mean, median, standardDeviation } from 'simple-statistics';
@@ -21,6 +21,7 @@ const enum CacheKeys {
 export class AppComponent implements OnInit, AfterViewInit {
 
   @ViewChild('canvas') private canvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChildren('form') private forms?: QueryList<ElementRef<HTMLFormElement>>;
 
   options = this.cache.get<IOptions>(CacheKeys.Options, {
     simcount: '100000',
@@ -109,6 +110,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   onCalculateClick(): void {
+    if (this.forms) {
+      for (const form of this.forms) {
+        const isvalid = form.nativeElement.reportValidity();
+        if (!isvalid) return;
+      }
+    }
+
     this.loading = true;
 
     if (this.chart) {

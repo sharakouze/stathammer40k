@@ -1,200 +1,210 @@
 <div class="container-fluid">
   <canvas #canvas></canvas>
-  <div class="card mt-2">
-    <div class="card-body">
-      <div class="row">
-        <div class="col">
-          <div class="form-floating">
-            <input type="number" class="form-control" required min="1" [(ngModel)]="options.simcount"
-              (ngModelChange)="onOptionsChange()">
-            <label>Number of simulations</label>
+  <form #form>
+    <div class="card mt-2">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <div class="form-floating">
+              <input type="number" class="form-control" required min="1" name="simcount" [(ngModel)]="options.simcount"
+                (ngModelChange)="onOptionsChange()">
+              <label>Number of simulations</label>
+            </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="options.xaxis" (ngModelChange)="onOptionsChange()">
-              <option value="0">Minimum damage</option>
-              <option value="1">Damage</option>
-            </select>
-            <label>X-axis</label>
+          <div class="col">
+            <div class="form-floating">
+              <select class="form-select" [(ngModel)]="options.xaxis" name="xaxis" (ngModelChange)="onOptionsChange()">
+                <option value="0">Minimum damage</option>
+                <option value="1">Damage</option>
+              </select>
+              <label>X-axis</label>
+            </div>
           </div>
-        </div>
-        <div class="col-auto">
-          <button type="button" class="btn btn-primary" (click)="onWeaponAddClick()">Add weapon</button>
-        </div>
-        <div class="col-auto">
-          <button type="button" class="btn btn-primary" (click)="onCalculateClick()">
-            <span class="spinner-border spinner-border-sm" *ngIf="loading; else text"></span>
-            <ng-template #text>Calculate</ng-template>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card mt-2">
-    <div class="card-header">
-      <h5 class="card-title">Target</h5>
-    </div>
-    <div class="card-body">
-      <div class="row gy-2">
-        <div class="col-6 col-sm-4 col-lg-3">
-          <div class="form-floating">
-            <input type="number" class="form-control" required min="1" [(ngModel)]="target.toughness"
-              (ngModelChange)="onTargetChange()">
-            <label>Toughness</label>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary" (click)="onWeaponAddClick()">Add weapon</button>
           </div>
-        </div>
-        <div class="col-6 col-sm-4 col-lg-3">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="target.armorsave" (ngModelChange)="onTargetChange()">
-              <option value="0">-</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-              <option value="5">5+</option>
-              <option value="6">6+</option>
-            </select>
-            <label>Armour save</label>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-lg-3">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="target.invulsave" (ngModelChange)="onTargetChange()">
-              <option value="0">-</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-              <option value="5">5+</option>
-              <option value="6">6+</option>
-            </select>
-            <label>Invulnerable save</label>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-lg-3">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="target.fnp" (ngModelChange)="onTargetChange()">
-              <option value="0">-</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-              <option value="5">5+</option>
-              <option value="6">6+</option>
-            </select>
-            <label>Feel no pain</label>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-lg-6">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="target.hitrollmod" (ngModelChange)="onTargetChange()">
-              <option value="0">-</option>
-              <option value="1">+1</option>
-              <option value="-1">-1</option>
-            </select>
-            <label>Hit roll modifier</label>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-lg-6">
-          <div class="form-floating">
-            <select class="form-select" [(ngModel)]="target.woundrollmod" (ngModelChange)="onTargetChange()">
-              <option value="0">-</option>
-              <option value="1">+1</option>
-              <option value="-1">-1</option>
-            </select>
-            <label>Wound roll modifier</label>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary" (click)="onCalculateClick()">
+              <span class="spinner-border spinner-border-sm" *ngIf="loading; else text"></span>
+              <ng-template #text>Calculate</ng-template>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <ng-container *ngFor="let weapon of weapons; let index = index; trackBy: trackByWeapon">
     <div class="card mt-2">
       <div class="card-header">
-        <h5 class="card-title float-start">Weapon {{index+1}}</h5>
-        <button type="button" class="btn-close float-end" (click)="onWeaponRemoveClick(index)"></button>
+        <h5 class="card-title">Target</h5>
       </div>
       <div class="card-body">
         <div class="row gy-2">
           <div class="col-6 col-sm-4 col-lg-3">
             <div class="form-floating">
-              <input type="text" class="form-control" [(ngModel)]="weapon.name" (ngModelChange)="onWeaponChange()">
-              <label>Name</label>
+              <input type="number" class="form-control" required min="1" name="toughness" [(ngModel)]="target.toughness"
+                (ngModelChange)="onTargetChange()">
+              <label>Toughness</label>
             </div>
           </div>
           <div class="col-6 col-sm-4 col-lg-3">
             <div class="form-floating">
-              <select class="form-select" [style.backgroundColor]="weapon.color" [(ngModel)]="weapon.color"
-                (ngModelChange)="onWeaponChange()">
-                <option *ngFor="let color of colors" [style.backgroundColor]="color" [value]="color">{{color}}
-                </option>
-              </select>
-              <label>Color</label>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-lg-3">
-            <div class="form-floating">
-              <input type="text" class="form-control" required [(ngModel)]="weapon.attacks"
-                (ngModelChange)="onWeaponChange()">
-              <label>Attacks</label>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-lg-3">
-            <div class="form-floating">
-              <select class="form-select" [(ngModel)]="weapon.tohit" (ngModelChange)="onWeaponChange()">
+              <select class="form-select" name="armorsave" [(ngModel)]="target.armorsave"
+                (ngModelChange)="onTargetChange()">
                 <option value="0">-</option>
-                <option value="1">Auto-hit</option>
                 <option value="2">2+</option>
                 <option value="3">3+</option>
                 <option value="4">4+</option>
                 <option value="5">5+</option>
                 <option value="6">6+</option>
               </select>
-              <label>To hit</label>
+              <label>Armour save</label>
             </div>
           </div>
           <div class="col-6 col-sm-4 col-lg-3">
             <div class="form-floating">
-              <input type="text" class="form-control" required [(ngModel)]="weapon.strength"
-                (ngModelChange)="onWeaponChange()">
-              <label>Strength</label>
+              <select class="form-select" name="invulsave" [(ngModel)]="target.invulsave"
+                (ngModelChange)="onTargetChange()">
+                <option value="0">-</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+                <option value="5">5+</option>
+                <option value="6">6+</option>
+              </select>
+              <label>Invulnerable save</label>
             </div>
           </div>
           <div class="col-6 col-sm-4 col-lg-3">
             <div class="form-floating">
-              <input type="number" class="form-control" [(ngModel)]="weapon.ap" (ngModelChange)="onWeaponChange()">
-              <label>AP</label>
+              <select class="form-select" name="fnp" [(ngModel)]="target.fnp" (ngModelChange)="onTargetChange()">
+                <option value="0">-</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+                <option value="5">5+</option>
+                <option value="6">6+</option>
+              </select>
+              <label>Feel no pain</label>
             </div>
           </div>
-          <div class="col-6 col-sm-4 col-lg-3">
+          <div class="col-6 col-sm-4 col-lg-6">
             <div class="form-floating">
-              <input type="text" class="form-control" required [(ngModel)]="weapon.damage"
-                (ngModelChange)="onWeaponChange()">
-              <label>Damage</label>
+              <select class="form-select" name="hitrollmod" [(ngModel)]="target.hitrollmod"
+                (ngModelChange)="onTargetChange()">
+                <option value="0">-</option>
+                <option value="1">+1</option>
+                <option value="-1">-1</option>
+              </select>
+              <label>Hit roll modifier</label>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="card-body border-top" *ngIf="results | getResult: weapon.uuid as result">
-        <div class="row">
-          <div class="col">
-            <div class="input-group">
-              <span class="input-group-text">Average</span>
-              <input type="text" class="form-control" readonly [value]="result.mean | number">
-            </div>
-          </div>
-          <div class="col">
-            <div class="input-group">
-              <span class="input-group-text">Standard deviation</span>
-              <input type="text" class="form-control" readonly [value]="result.stddev | number">
-            </div>
-          </div>
-          <div class="col">
-            <div class="input-group">
-              <span class="input-group-text">Median</span>
-              <input type="text" class="form-control" readonly [value]="result.median | number">
+          <div class="col-6 col-sm-4 col-lg-6">
+            <div class="form-floating">
+              <select class="form-select" name="woundrollmod" [(ngModel)]="target.woundrollmod"
+                (ngModelChange)="onTargetChange()">
+                <option value="0">-</option>
+                <option value="1">+1</option>
+                <option value="-1">-1</option>
+              </select>
+              <label>Wound roll modifier</label>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </form>
+  <ng-container *ngFor="let weapon of weapons; let index = index; trackBy: trackByWeapon">
+    <form #form>
+      <div class="card mt-2">
+        <div class="card-header">
+          <h5 class="card-title float-start">Weapon {{index+1}}</h5>
+          <button type="button" class="btn-close float-end" (click)="onWeaponRemoveClick(index)"></button>
+        </div>
+        <div class="card-body">
+          <div class="row gy-2">
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="name" [(ngModel)]="weapon.name"
+                  (ngModelChange)="onWeaponChange()">
+                <label>Name</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <select class="form-select" [style.backgroundColor]="weapon.color" name="color"
+                  [(ngModel)]="weapon.color" (ngModelChange)="onWeaponChange()">
+                  <option *ngFor="let color of colors" [style.backgroundColor]="color" [value]="color">{{color}}
+                  </option>
+                </select>
+                <label>Color</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" required name="attacks" [(ngModel)]="weapon.attacks"
+                  (ngModelChange)="onWeaponChange()">
+                <label>Attacks</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <select class="form-select" name="tohit" [(ngModel)]="weapon.tohit" (ngModelChange)="onWeaponChange()">
+                  <option value="0">-</option>
+                  <option value="1">Auto-hit</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                  <option value="6">6+</option>
+                </select>
+                <label>To hit</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" required name="strength" [(ngModel)]="weapon.strength"
+                  (ngModelChange)="onWeaponChange()">
+                <label>Strength</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <input type="number" class="form-control" name="ap" [(ngModel)]="weapon.ap"
+                  (ngModelChange)="onWeaponChange()">
+                <label>AP</label>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" required name="damage" [(ngModel)]="weapon.damage"
+                  (ngModelChange)="onWeaponChange()">
+                <label>Damage</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body border-top" *ngIf="results | getResult: weapon.uuid as result">
+          <div class="row">
+            <div class="col">
+              <div class="input-group">
+                <span class="input-group-text">Average</span>
+                <input type="text" class="form-control" readonly [value]="result.mean | number">
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <span class="input-group-text">Standard deviation</span>
+                <input type="text" class="form-control" readonly [value]="result.stddev | number">
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <span class="input-group-text">Median</span>
+                <input type="text" class="form-control" readonly [value]="result.median | number">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </ng-container>
 </div>
