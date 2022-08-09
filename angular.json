@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "stat-hammer-40k": {
+    "stathammer40k": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/stat-hammer-40k",
+            "outputPath": "dist/stathammer40k",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -83,10 +83,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "stat-hammer-40k:build:production"
+              "browserTarget": "stathammer40k:build:production"
             },
             "development": {
-              "browserTarget": "stat-hammer-40k:build:development"
+              "browserTarget": "stathammer40k:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -94,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "stat-hammer-40k:build"
+            "browserTarget": "stathammer40k:build"
           }
         },
         "test": {
