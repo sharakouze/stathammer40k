@@ -27,4 +27,5 @@ export interface IWeaponResult {
     uuid: string;
     mean: number;
     stddev: number;
+    median: number;
 }

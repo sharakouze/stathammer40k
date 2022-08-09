@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col">
           <div class="form-floating">
-            <input type="number" class="form-control" [(ngModel)]="options.simcount"
+            <input type="number" class="form-control" required min="1" [(ngModel)]="options.simcount"
               (ngModelChange)="onOptionsChange()">
             <label>Number of simulations</label>
           </div>
@@ -19,11 +19,13 @@
             <label>X-axis</label>
           </div>
         </div>
-        <div class="col">
+        <div class="col-auto">
           <button type="button" class="btn btn-primary" (click)="onWeaponAddClick()">Add weapon</button>
-          <button type="button" class="btn btn-primary ms-1" (click)="onRenderClick()">
-            <span class="spinner-border spinner-border-sm" *ngIf="loading; else x"></span>
-            <ng-template #x>Calc</ng-template>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-primary" (click)="onCalculateClick()">
+            <span class="spinner-border spinner-border-sm" *ngIf="loading; else text"></span>
+            <ng-template #text>Calculate</ng-template>
           </button>
         </div>
       </div>
@@ -122,7 +124,8 @@
             <div class="form-floating">
               <select class="form-select" [style.backgroundColor]="weapon.color" [(ngModel)]="weapon.color"
                 (ngModelChange)="onWeaponChange()">
-                <option *ngFor="let color of colors" [style.backgroundColor]="color" [value]="color">{{color}}</option>
+                <option *ngFor="let color of colors" [style.backgroundColor]="color" [value]="color">{{color}}
+                </option>
               </select>
               <label>Color</label>
             </div>
@@ -182,6 +185,12 @@
             <div class="input-group">
               <span class="input-group-text">Standard deviation</span>
               <input type="text" class="form-control" readonly [value]="result.stddev | number">
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <span class="input-group-text">Median</span>
+              <input type="text" class="form-control" readonly [value]="result.median | number">
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { nanoid } from 'nanoid';
-import { mean, standardDeviation } from 'simple-statistics';
+import { mean, median, standardDeviation } from 'simple-statistics';
+import { COLORS } from './consts/colors';
 import { CacheService } from './services/cache.service';
 import { IOptions, ITarget, IWeapon, IWeaponResult } from './types/app';
 import { IAttackWorkerData } from './types/workers';
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   loading = false;
   results: IWeaponResult[] = [];
 
-  colors = ['CSS_COLOR_NAMES'];
+  colors = COLORS;
 
   private chart?: Chart;
 
@@ -89,7 +90,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   onWeaponAddClick(): void {
-    console.log(this.canvas);
     this.weapons.push({
       uuid: nanoid(),
       name: '',
@@ -108,10 +108,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.cache.set(CacheKeys.Weapons, this.weapons);
   }
 
-  async onRenderClick(): Promise<void> {
+  onCalculateClick(): void {
     this.loading = true;
-
-    const simcount = Number(this.options.simcount);
 
     if (this.chart) {
       if (this.chart.options.scales)
@@ -123,20 +121,17 @@ export class AppComponent implements OnInit, AfterViewInit {
         };
 
       this.chart.data.datasets = [];
+      this.chart.update();
     }
 
     const worker = new Worker(new URL('./workers/attack.worker.ts', import.meta.url));
     worker.onmessage = (ev: MessageEvent<Map<string, number[]>>) => {
-      console.log('worker end', new Date());
-
       for (const [uuid, damages] of ev.data) {
-        const average = mean(damages);
-        const stddev = standardDeviation(damages);
-
         this.results.push({
           uuid,
-          mean: average,
-          stddev
+          mean: mean(damages),
+          stddev: standardDeviation(damages),
+          median: median(damages)
         });
 
         /* exemple :
@@ -152,32 +147,32 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         const data: (number | null)[] = [];
 
-        for (let j = 0; j < dmg.length; j++) {
+        for (let i = 0; i < dmg.length; i++) {
           if (this.options.xaxis === '0') {
-            const sum = dmg.slice(j).reduce((p, c) => p + (c || 0), 0);
-            data.push(sum * 100 / simcount);
+            const sum = dmg.slice(i).reduce((p, c) => p + (c || 0), 0);
+            data.push(sum * 100 / damages.length);
           }
           else {
-            if (dmg[j] === undefined) {
+            if (dmg[i] === undefined) {
               data.push(null);
             }
             else {
-              data.push(dmg[j] * 100 / simcount);
+              data.push(dmg[i] * 100 / damages.length);
             }
           }
         }
 
         if (this.chart) {
+          const weapon = this.weapons.find(x => x.uuid === uuid);
           this.chart.data.datasets.push({
             type: 'line',
-            label: 'x',//weapon.name || 'Weapon ' + (i + 1),
+            label: weapon?.name,// || 'Weapon ' + (i + 1),
             data,
             spanGaps: true,
-            //borderColor: weapon.color,
-            //backgroundColor: weapon.color
+            borderColor: weapon?.color,
+            backgroundColor: weapon?.color
           });
         }
-
       }
 
       this.results = [...this.results];
@@ -186,15 +181,15 @@ export class AppComponent implements OnInit, AfterViewInit {
         const max = this.chart.data.datasets.reduce((p, c) => Math.max(p, c.data.length), 0);
         const arr = new Array(max);
         this.chart.data.labels = arr.fill(undefined).map((_, index) => index);
-  
+
         this.chart.update();
       }
-  
+
       this.loading = false;
     };
 
     const data: IAttackWorkerData = {
-      simcount,
+      simcount: Number(this.options.simcount),
       target: this.target,
       weapons: this.weapons,
     };
