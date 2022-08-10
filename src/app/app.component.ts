@@ -176,7 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         if (this.chart) {
           const index = this.weapons.findIndex(x => x.uuid === uuid);
-          if (index !== 0) {
+          if (index !== -1) {
             const weapon = this.weapons[index];
             this.chart.data.datasets.push({
               type: 'line',

@@ -26,6 +26,8 @@ addEventListener('message', (ev: MessageEvent<IAttackWorkerData>) => {
       .setArmorPenetration(Number(weapon.ap))
       .setDamage(weapon.damage);
 
+    console.log(weapon);
+
     const n1 = Number(weapon.onhit6additionalhits);
     if (n1) {
       builder.setOnHit(roll => {
