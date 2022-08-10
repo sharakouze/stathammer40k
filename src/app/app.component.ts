@@ -99,7 +99,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       tohit: '3',
       strength: '4',
       ap: '-1',
-      damage: '1'
+      damage: '1',
+      hitrollmod: '0',
+      woundrollmod: '0',
+      onhit6additionalhits: '',
+      onwound6mortalwounds: '',
     });
     this.cache.set(CacheKeys.Weapons, this.weapons);
   }
@@ -171,15 +175,18 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
 
         if (this.chart) {
-          const weapon = this.weapons.find(x => x.uuid === uuid);
-          this.chart.data.datasets.push({
-            type: 'line',
-            label: weapon?.name,// || 'Weapon ' + (i + 1),
-            data,
-            spanGaps: true,
-            borderColor: weapon?.color,
-            backgroundColor: weapon?.color
-          });
+          const index = this.weapons.findIndex(x => x.uuid === uuid);
+          if (index !== 0) {
+            const weapon = this.weapons[index];
+            this.chart.data.datasets.push({
+              type: 'line',
+              label: weapon.name || 'Weapon ' + (index + 1),
+              data,
+              spanGaps: true,
+              borderColor: weapon.color,
+              backgroundColor: weapon.color
+            });
+          }
         }
       }
 

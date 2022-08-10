@@ -19,13 +19,28 @@ addEventListener('message', (ev: MessageEvent<IAttackWorkerData>) => {
   const map = new Map<string, number[]>();
 
   for (const weapon of weapons) {
-    const wpn = new WeaponBuilder()
+    const builder = new WeaponBuilder()
       .setAttacks(weapon.attacks)
       .setToHit(Number(weapon.tohit))
       .setStrength(Number(weapon.strength))
       .setArmorPenetration(Number(weapon.ap))
-      .setDamage(weapon.damage)
-      .build();
+      .setDamage(weapon.damage);
+
+    const n1 = Number(weapon.onhit6additionalhits);
+    if (n1) {
+      builder.setOnHit(roll => {
+        return { hitcount: roll === 6 ? n1 : 0 };
+      });
+    }
+
+    const n2 = Number(weapon.onwound6mortalwounds);
+    if (n2) {
+      builder.setOnWound(roll => {
+        return { mortalwoundcount: roll === 6 ? n2 : 0 };
+      });
+    }
+
+    const wpn = builder.build();
 
     const damages: number[] = [];
 

@@ -1,4 +1,4 @@
-import { MortalWoundFunction } from "./types";
+import { OnHitFunction, OnWoundFunction } from "./types";
 import { Weapon } from "./weapon";
 
 export class WeaponBuilder {
@@ -8,9 +8,10 @@ export class WeaponBuilder {
     private strength?: number;
     private ap?: number;
     private damage?: number | string;
-    private wound?: MortalWoundFunction;
     private hitrollmod: number = 0;
     private woundrollmod: number = 0;
+    private onhit?: OnHitFunction;
+    private onwound?: OnWoundFunction;
 
     constructor() {
     }
@@ -52,8 +53,13 @@ export class WeaponBuilder {
         return this;
     }
 
-    setMortalWound(value: MortalWoundFunction): this {
-        this.wound = value;
+    setOnHit(value: OnHitFunction): this {
+        this.onhit = value;
+        return this;
+    }
+
+    setOnWound(value: OnWoundFunction): this {
+        this.onwound = value;
         return this;
     }
 
@@ -74,6 +80,7 @@ export class WeaponBuilder {
             throw new Error('Damage is null or undefined');
         }
 
-        return new Weapon(this.attacks, this.tohit, this.strength, this.ap, this.damage, this.hitrollmod, this.woundrollmod, this.wound);
+        return new Weapon(this.attacks, this.tohit, this.strength, this.ap, this.damage, this.hitrollmod, this.woundrollmod,
+            this.onhit, this.onwound);
     }
 }

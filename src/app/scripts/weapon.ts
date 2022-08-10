@@ -1,6 +1,6 @@
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { Target } from "./target";
-import { MortalWoundFunction } from "./types";
+import { OnHitFunction, OnWoundFunction } from "./types";
 
 export class Weapon {
 
@@ -11,7 +11,8 @@ export class Weapon {
         private damage: number | string,
         private hitrollmod: number,
         private woundrollmod: number,
-        private wound: MortalWoundFunction | undefined
+        private onhit: OnHitFunction | undefined,
+        private onwound: OnWoundFunction | undefined
     ) {
     }
 
@@ -106,6 +107,11 @@ export class Weapon {
                 if (roll === 6 || roll + hitrollmod >= this.tohit) {
                     hitcount++;
                 }
+
+                if (this.onhit) {
+                    const oh = this.onhit(roll);
+                    hitcount += oh.hitcount;
+                }
             }
         }
 
@@ -119,9 +125,9 @@ export class Weapon {
                 woundcount++;
             }
 
-            if (this.wound) {
-                const mw = this.wound(roll);
-                mortalcount += mw;
+            if (this.onwound) {
+                const ow = this.onwound(roll);
+                mortalcount += ow.mortalwoundcount;
             }
         }
 

@@ -21,6 +21,10 @@ export interface IWeapon {
     strength: string;
     ap: string;
     damage: string;
+    hitrollmod: string;
+    woundrollmod: string;
+    onhit6additionalhits: string;
+    onwound6mortalwounds: string;
 }
 
 export interface IWeaponResult {
