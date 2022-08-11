@@ -93,7 +93,9 @@ export class Weapon {
 
         let mortalcount = 0;
 
-        const attackcount = typeof this.attacks === 'number' ? this.attacks : this.getDiceRoll(this.attacks).total;
+        const attackcount = typeof this.attacks === 'number' ?
+            this.attacks :
+            this.getDiceRoll(this.attacks).total;
 
         let hitcount = 0;
         const hitrollmod = this.getHitRollModifier(target);
@@ -145,7 +147,10 @@ export class Weapon {
 
         let damagecount = 0;
         for (let i = 0; i < woundcount - savecount; i++) {
-            const damage = typeof this.damage === 'number' ? this.damage : this.getDiceRoll(this.damage).total;
+            const damage = typeof this.damage === 'number' ?
+                this.damage :
+                this.getDiceRoll(this.damage).total;
+
             damagecount += damage;
         }
 

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, Vie
 import { Chart, registerables } from 'chart.js';
 import { nanoid } from 'nanoid';
 import { mean, median, standardDeviation } from 'simple-statistics';
+import { axisLabels } from './consts/axis-labels';
 import { COLORS } from './consts/colors';
 import { CacheService } from './services/cache.service';
 import { IOptions, ITarget, IWeapon, IWeaponResult } from './types/app';
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   results: IWeaponResult[] = [];
 
   colors = COLORS;
+  axis = axisLabels;
 
   private chart?: Chart;
 
@@ -62,9 +64,9 @@ export class AppComponent implements OnInit, AfterViewInit {
           options: {
             scales: {
               y: {
-                title: {
-                  display: true,
-                  text: '%'
+                beginAtZero: true,
+                ticks: {
+                  callback: value => value + '%'
                 }
               }
             }
@@ -184,7 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               data,
               spanGaps: true,
               borderColor: weapon.color,
-              backgroundColor: weapon.color
+              backgroundColor: weapon.color,
             });
           }
         }
