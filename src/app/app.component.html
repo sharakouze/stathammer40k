@@ -3,6 +3,9 @@
   <canvas #canvas></canvas>
   <form #form>
     <div class="card mt-2">
+      <div class="card-header">
+        <h5 class="card-title">Options</h5>
+      </div>
       <div class="card-body">
         <div class="row">
           <div class="col">
@@ -242,18 +245,19 @@
                 <label>Wound roll modifier</label>
               </div>
             </div>
-            <div class="col-12 col-sm-12 col-lg-6">
-              <div class="input-group flex-nowrap">
-                <input type="number" class="form-control" min="1" name="onhit6additionalhits"
+            <div class="w-100 m-0"></div>
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-floating">
+                <input type="number" class="form-control" min="0" name="onhit6additionalhits"
                   [(ngModel)]="weapon.onhit6additionalhits" (ngModelChange)="onWeaponChange()">
-                <span class="input-group-text">additional hits on unmodified 6 to hit</span>
+                <label>Additional hits on unmodified 6 to hit</label>
               </div>
             </div>
-            <div class="col-12 col-sm-12 col-lg-6">
-              <div class="input-group flex-nowrap">
-                <input type="number" class="form-control" min="1" name="onwound6mortalwounds"
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-floating">
+                <input type="number" class="form-control" min="0" name="onwound6mortalwounds"
                   [(ngModel)]="weapon.onwound6mortalwounds" (ngModelChange)="onWeaponChange()">
-                <span class="input-group-text">mortal wounds on unmodified 6 to wound</span>
+                <label>Mortal wounds on unmodified 6 to wound</label>
               </div>
             </div>
           </div>
