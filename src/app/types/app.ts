@@ -1,6 +1,8 @@
+import { XAXISLABELS } from "../consts/x-axis-labels";
+
 export interface IOptions {
     simcount: string;
-    xaxis: string;
+    xaxis: typeof XAXISLABELS[number]
 }
 
 export interface ITarget {

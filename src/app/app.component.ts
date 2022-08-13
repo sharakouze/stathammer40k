@@ -2,8 +2,8 @@ import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, Vie
 import { Chart, registerables } from 'chart.js';
 import { nanoid } from 'nanoid';
 import { mean, median, standardDeviation } from 'simple-statistics';
-import { axisLabels } from './consts/axis-labels';
 import { COLORS } from './consts/colors';
+import { XAXISLABELS } from './consts/x-axis-labels';
 import { CacheService } from './services/cache.service';
 import { IOptions, ITarget, IWeapon, IWeaponResult } from './types/app';
 import { IAttackWorkerData } from './types/workers';
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   options = this.cache.get<IOptions>(CacheKeys.Options, {
     simcount: '100000',
-    xaxis: '0'
+    xaxis: 'Minimum damage'
   });
   target = this.cache.get<ITarget>(CacheKeys.Target, {
     toughness: '4',
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   results: IWeaponResult[] = [];
 
   colors = COLORS;
-  axis = axisLabels;
+  xaxis = XAXISLABELS;
 
   private chart?: Chart;
 
@@ -69,8 +69,15 @@ export class AppComponent implements OnInit, AfterViewInit {
                   callback: value => value + '%'
                 }
               }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: item => item.dataset.label + ' : ' + item.formattedValue + '%'
+                }
+              }
             }
-          }
+          },
         });
       }
     }
@@ -126,13 +133,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.loading = true;
 
     if (this.chart) {
-      if (this.chart.options.scales)
+      if (this.chart.options.scales) {
         this.chart.options.scales['x'] = {
           title: {
             display: true,
-            text: 'xyz'
+            text: this.options.xaxis
           }
         };
+      }
+
+      if (this.chart.options.plugins && this.chart.options.plugins.tooltip && this.chart.options.plugins.tooltip.callbacks) {
+        this.chart.options.plugins.tooltip.callbacks.title = items => this.options.xaxis + ' : ' + items[0].label
+      }
 
       this.chart.data.datasets = [];
       this.chart.update();
@@ -162,7 +174,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         const data: (number | null)[] = [];
 
         for (let i = 0; i < dmg.length; i++) {
-          if (this.options.xaxis === '0') {
+          if (this.options.xaxis === 'Minimum damage') {
             const sum = dmg.slice(i).reduce((p, c) => p + (c || 0), 0);
             data.push(sum * 100 / damages.length);
           }

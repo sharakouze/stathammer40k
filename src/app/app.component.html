@@ -7,27 +7,24 @@
         <h5 class="card-title">Options</h5>
       </div>
       <div class="card-body">
-        <div class="row">
-          <div class="col">
+        <div class="row gy-2">
+          <div class="col-6 col-md-4">
             <div class="form-floating">
               <input type="number" class="form-control" required min="1" name="simcount" [(ngModel)]="options.simcount"
                 (ngModelChange)="onOptionsChange()">
               <label>Number of simulations</label>
             </div>
           </div>
-          <div class="col">
+          <div class="col-6 col-md-4">
             <div class="form-floating">
               <select class="form-select" [(ngModel)]="options.xaxis" name="xaxis" (ngModelChange)="onOptionsChange()">
-                <option value="0">Minimum damage</option>
-                <option value="1">Damage</option>
+                <option *ngFor="let x of xaxis" [value]="x">{{x}}</option>
               </select>
               <label>X-axis</label>
             </div>
           </div>
-          <div class="col-auto">
-            <button type="button" class="btn btn-primary" (click)="onWeaponAddClick()">Add weapon</button>
-          </div>
-          <div class="col-auto">
+          <div class="col col-md-4">
+            <button type="button" class="btn btn-primary me-1" (click)="onWeaponAddClick()">Add weapon</button>
             <button type="button" class="btn btn-primary" [disabled]="!weapons.length" (click)="onCalculateClick()">
               <span class="spinner-border spinner-border-sm" *ngIf="loading; else text"></span>
               <ng-template #text>Calculate</ng-template>
